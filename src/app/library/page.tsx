@@ -888,7 +888,7 @@ function ScenarioCard({ scenario, index }: { scenario: PublishedScenario; index:
         throw new Error(data.error?.message || data.error || "ゲームの作成に失敗しました");
       }
 
-      router.push(`/game/${data.gameId}/lobby`);
+      router.push(`/game/${data.gameId}/setup`);
     } catch (error) {
       console.error("Failed to create game:", error);
       alert("ゲームの作成に失敗しました。もう一度お試しください。");
