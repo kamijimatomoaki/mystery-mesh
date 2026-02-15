@@ -1,0 +1,57 @@
+# Dependencies (Docker内で再インストール)
+node_modules/
+
+# Build output (Docker内で再ビルド)
+.next/
+out/
+
+# Version control
+.git/
+.gitignore
+
+# Claude / AI assistant
+.claude/
+
+# Development tooling
+devtools/
+scripts/
+dev_memo
+
+# Testing
+tests/
+e2e/
+test-results/
+playwright-report/
+test-output.log
+playwright.config.ts
+
+# Documentation
+docs/
+
+# Environment files (シークレット)
+.env
+.env.local
+.env.development
+.env.production
+.env.example
+
+# TypeScript build cache
+tsconfig.tsbuildinfo
+
+# Firebase tooling (ランタイム不要)
+firebase.json
+firestore.rules
+.firebaserc
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Misc
+README.md
