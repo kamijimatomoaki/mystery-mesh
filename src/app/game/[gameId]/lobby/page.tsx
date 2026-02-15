@@ -44,7 +44,7 @@ export default function LobbyPage({ params }: PageProps) {
   const { gameId } = use(params);
   const router = useRouter();
 
-  const { userId } = useAuth();
+  const { userId, loading: authLoading } = useAuth();
   const currentUserId = userId || "";
 
   // ゲームとシナリオデータ（APIから取得）
@@ -96,6 +96,44 @@ export default function LobbyPage({ params }: PageProps) {
 
     fetchGameData();
   }, [gameId, currentUserId]);
+
+  // 認証ローディング中
+  if (authLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center ink-bg px-6">
+        <Card variant="parchment" className="max-w-md text-center parchment-card">
+          <CardContent className="py-16">
+            <BookOpen className="mx-auto mb-4 h-16 w-16 animate-pulse text-ink-brown/30" />
+            <p className="text-ink-brown">認証を確認しています...</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // 未認証
+  if (!userId) {
+    return (
+      <div className="flex min-h-screen items-center justify-center ink-bg px-6">
+        <Card variant="parchment" className="max-w-md text-center parchment-card">
+          <CardContent className="py-16">
+            <AlertCircle className="mx-auto mb-4 h-16 w-16 text-gold-accent" />
+            <h1 className="mb-4 font-title text-2xl font-bold text-ink-black">
+              サインインが必要です
+            </h1>
+            <p className="mb-6 font-body text-ink-brown">
+              ゲームに参加するにはサインインしてください。
+            </p>
+            <Link href={`/auth/signin?redirect=/game/${gameId}/lobby`}>
+              <Button variant="seal" className="gold-button">
+                サインインする
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   // ローディング中
   if (isLoading) {

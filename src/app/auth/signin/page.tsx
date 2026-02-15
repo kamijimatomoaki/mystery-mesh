@@ -110,7 +110,7 @@ function SignInContent() {
                 📚
               </motion.div>
               <CardTitle className="text-2xl text-ink-black">
-                MisteryMeshへようこそ
+                MysteryMeshへようこそ
               </CardTitle>
               <CardDescription>
                 アカウントでサインインして、謎解きの旅を始めましょう
@@ -199,7 +199,7 @@ function SignInContent() {
           transition={{ delay: 0.5 }}
           className="text-center mt-6 text-parchment-light/50 text-xs font-body"
         >
-          MisteryMesh v0.1.0 Alpha
+          MysteryMesh v0.1.0 Alpha
         </motion.div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { Timestamp } from "firebase/firestore";
 
 /**
- * MisteryMesh Domain Models (v4.0 Final)
+ * MysteryMesh Domain Models (v4.0 Final)
  * "The Infinite Mystery Library" Edition
  */
 

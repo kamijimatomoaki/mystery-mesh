@@ -43,7 +43,7 @@ export function Navbar() {
               📚
             </motion.span>
             <span className="font-title text-xl text-parchment-light group-hover:text-gold-accent transition-colors">
-              MisteryMesh
+              MysteryMesh
             </span>
           </Link>
 

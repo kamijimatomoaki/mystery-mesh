@@ -55,7 +55,7 @@ export default function DebugPage() {
             Component Showcase
           </h1>
           <p className="text-primary-foreground/80">
-            MisteryMesh UI Components - Dark Academia Edition
+            MysteryMesh UI Components - Dark Academia Edition
           </p>
         </div>
 
@@ -543,7 +543,7 @@ export default function DebugPage() {
                           プロジェクト概要
                         </h3>
                         <p className="text-primary-foreground/80">
-                          MisteryMeshは、AIと人間が協力してマーダーミステリーをプレイするプラットフォームです。
+                          MysteryMeshは、AIと人間が協力してマーダーミステリーをプレイするプラットフォームです。
                         </p>
                       </div>
                     ),
@@ -612,7 +612,7 @@ export default function DebugPage() {
         {/* フッター */}
         <div className="text-center pt-12 pb-8">
           <p className="text-primary-foreground/60 text-sm">
-            MisteryMesh UI Components v0.2.0
+            MysteryMesh UI Components v0.2.0
           </p>
         </div>
       </div>

@@ -93,7 +93,7 @@ export function Hero({ className = "" }: HeroProps) {
             }}
             className="font-title text-6xl md:text-8xl font-bold text-parchment-light"
           >
-            MisteryMesh
+            MysteryMesh
           </motion.h1>
 
           <p className="font-title text-xl md:text-2xl text-gold-accent candle-glow">

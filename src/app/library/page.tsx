@@ -840,6 +840,7 @@ function MyLibraryContent({
  */
 function ScenarioCard({ scenario, index }: { scenario: PublishedScenario; index: number }) {
   const router = useRouter();
+  const { userId, displayName } = useAuth();
   const [isStarting, setIsStarting] = useState(false);
 
   const difficultyColors = {
@@ -859,6 +860,12 @@ function ScenarioCard({ scenario, index }: { scenario: PublishedScenario; index:
     e.stopPropagation();
 
     if (isStarting) return;
+
+    if (!userId) {
+      router.push("/auth/signin?redirect=/library");
+      return;
+    }
+
     setIsStarting(true);
 
     try {
@@ -867,7 +874,11 @@ function ScenarioCard({ scenario, index }: { scenario: PublishedScenario; index:
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           scenarioId: scenario.originalScenarioId || scenario.id,
-          hostDisplayName: "ホスト",
+          hostId: userId || "guest",
+          hostName: displayName || "ホスト",
+          roomName: `${scenario.title}の部屋`,
+          humanPlayerCount: 1,
+          aiPlayerCount: Math.max(0, (scenario.characterCount || 4) - 1),
         }),
       });
 

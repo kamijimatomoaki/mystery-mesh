@@ -26,7 +26,7 @@ export default function HomePage() {
             className="text-center mb-12"
           >
             <h2 className="font-title text-3xl md:text-4xl text-parchment-light mb-4">
-              MisteryMeshの特徴
+              MysteryMeshの特徴
             </h2>
             <p className="font-body text-parchment-light/70 max-w-2xl mx-auto">
               最先端のAI技術と伝統的なマーダーミステリーの融合
@@ -97,7 +97,7 @@ export default function HomePage() {
               </p>
             </motion.div>
 
-            {/* 動画エンディング */}
+            {/* ダークアカデミア */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -117,14 +117,14 @@ export default function HomePage() {
                 }}
                 className="text-5xl mb-6"
               >
-                🎬
+                🏛️
               </motion.div>
               <h3 className="font-title text-xl font-bold text-ink-black mb-3">
-                動画エンディング
+                没入感のある世界観
               </h3>
               <p className="font-body text-ink-brown leading-relaxed">
-                Veoが紡ぐドラマチックな結末。あなたの推理が映像になります。
-                真相解明の瞬間を、映画のような体験で。
+                ダークアカデミアの美しい世界で、謎に満ちた物語に没入。
+                AIが生成する画像とナレーションが、臨場感を演出します。
               </p>
             </motion.div>
           </div>
@@ -171,15 +171,11 @@ export default function HomePage() {
             <div className="flex items-center gap-2">
               <span className="text-xl">📚</span>
               <span className="font-title text-lg text-parchment-light">
-                MisteryMesh
+                MysteryMesh
               </span>
             </div>
 
             <div className="flex items-center gap-6 text-parchment-light/50 font-body text-sm">
-              <Link href="/debug" className="hover:text-gold-accent transition-colors">
-                開発者向け
-              </Link>
-              <span className="text-parchment-light/30">|</span>
               <span>Powered by Vertex AI</span>
             </div>
           </div>

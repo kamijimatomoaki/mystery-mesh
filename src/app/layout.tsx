@@ -47,7 +47,7 @@ const crimsonText = Crimson_Text({
 });
 
 export const metadata: Metadata = {
-  title: "MisteryMesh - The Infinite Mystery Library",
+  title: "MysteryMesh - The Infinite Mystery Library",
   description: "AI×人間が織りなす、無限のマーダーミステリー図書館",
   icons: {
     icon: "/favicon.ico",

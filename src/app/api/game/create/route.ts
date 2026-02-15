@@ -68,12 +68,12 @@ export const POST = withErrorHandler(async (request: NextRequest) => {
 
   // プレイヤー情報を構築
   const players: GameState["players"] = {
-    // ホストプレイヤー
+    // ホストプレイヤー（ホストは常に準備完了）
     [validated.hostId]: {
       characterId: "", // まだ未選択
       isHuman: true,
       displayName: validated.hostName,
-      isReady: false,
+      isReady: true,
       isOnline: true,
     },
   };

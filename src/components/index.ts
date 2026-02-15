@@ -1,5 +1,5 @@
 /**
- * MisteryMesh UI Components
+ * MysteryMesh UI Components
  * "The Infinite Mystery Library" Edition
  *
  * 全コンポーネントの一括エクスポート
