@@ -1,0 +1,368 @@
+rules_version = '2';
+
+/**
+ * MisteryMesh Firestore Security Rules
+ * Dark Academia Edition - "The ink of secrets must be protected"
+ *
+ * Security Philosophy:
+ * 1. Secrets are server-only (GM AI secrets, master timeline)
+ * 2. Agent brains are server-only (AI thinking, relationships)
+ * 3. Players can only read/write their own data
+ * 4. Public game state is read-only for players
+ */
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ========================================
+    // Helper Functions
+    // ========================================
+
+    /**
+     * Check if user is authenticated
+     */
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    /**
+     * Check if user is the owner of the resource
+     */
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    /**
+     * Check if user is admin (for debugging)
+     */
+    function isAdmin() {
+      return isAuthenticated() &&
+             request.auth.token.admin == true;
+    }
+
+    /**
+     * Check if user is a player in the game
+     * NOTE: プレイヤーはサブコレクションではなく、
+     *       games/{gameId} ドキュメントの players マップフィールドに格納されている
+     */
+    function isPlayerInGame(gameId) {
+      return isAuthenticated() &&
+             get(/databases/$(database)/documents/games/$(gameId)).data.players[request.auth.uid] != null;
+    }
+
+    /**
+     * Check if game is in lobby phase (can join)
+     */
+    function isLobbyPhase(gameData) {
+      return gameData.phase == 'lobby';
+    }
+
+
+    // ========================================
+    // Users Collection
+    // ========================================
+
+    match /users/{userId} {
+      // Users can read and write their own profile
+      allow read: if isOwner(userId);
+      allow write: if isOwner(userId);
+    }
+
+
+    // ========================================
+    // Scenarios Collection
+    // ========================================
+
+    match /scenarios/{scenarioId} {
+      // Anyone can read published scenarios
+      allow read: if resource.data.isPublished == true;
+
+      // Authors can read their own unpublished scenarios
+      allow read: if isAuthenticated() &&
+                     resource.data.authorId == request.auth.uid;
+
+      // Only authors can write their scenarios
+      allow write: if isAuthenticated() &&
+                      request.resource.data.authorId == request.auth.uid;
+    }
+
+
+    // ========================================
+    // Scenario Jobs Collection (Generation Status)
+    // ========================================
+
+    match /scenarioJobs/{jobId} {
+      // Users can only read their own jobs
+      allow read: if isAuthenticated() &&
+                     resource.data.userId == request.auth.uid;
+
+      // No direct writes (server-only)
+      allow write: if false;
+    }
+
+
+    // ========================================
+    // Published Scenarios Collection
+    // ========================================
+
+    match /publishedScenarios/{scenarioId} {
+      // Anyone can read published scenarios
+      allow read: if true;
+
+      // Authors can create their published scenarios
+      allow create: if isAuthenticated() &&
+                       request.resource.data.authorId == request.auth.uid;
+
+      // Authors can update their own published scenarios
+      allow update: if isAuthenticated() &&
+                       resource.data.authorId == request.auth.uid;
+
+      // Authors can delete their own published scenarios
+      allow delete: if isAuthenticated() &&
+                       resource.data.authorId == request.auth.uid;
+
+      // Likes Subcollection
+      match /likes/{userId} {
+        // Anyone can read likes
+        allow read: if true;
+
+        // Users can only like/unlike as themselves
+        allow create, delete: if isOwner(userId);
+
+        // No updates
+        allow update: if false;
+      }
+    }
+
+
+    // ========================================
+    // Ending Jobs Collection
+    // ========================================
+
+    match /endingJobs/{jobId} {
+      // Anyone with jobId can read (secure by obscurity)
+      allow read: if true;
+
+      // Server-only writes
+      allow write: if false;
+    }
+
+
+    // ========================================
+    // Video Jobs Collection
+    // ========================================
+
+    match /videoJobs/{jobId} {
+      // Anyone with jobId can read
+      allow read: if true;
+
+      // Server-only writes
+      allow write: if false;
+    }
+
+
+    // ========================================
+    // Games Collection
+    // ========================================
+
+    match /games/{gameId} {
+      // Players can read game state (but not secrets)
+      // ゲームドキュメント自体は resource.data で直接チェック（get() 不要）
+      allow read: if isAuthenticated() &&
+                     resource.data.players[request.auth.uid] != null;
+
+      // Host can create/update game (basic fields only)
+      allow create: if isAuthenticated() &&
+                       request.resource.data.hostId == request.auth.uid;
+
+      allow update: if isAuthenticated() &&
+                       resource.data.hostId == request.auth.uid &&
+                       // Cannot modify secrets via client
+                       !request.resource.data.diff(resource.data).affectedKeys()
+                         .hasAny(['secrets', 'masterTimeline']);
+
+      // No direct delete (use API)
+      allow delete: if false;
+
+
+      // ========================================
+      // Game Sub-collections
+      // ========================================
+
+      /**
+       * CRITICAL: Secrets Collection (Server-Only)
+       * Contains master timeline, true culprit, etc.
+       */
+      match /secrets/{secretId} {
+        // Nobody can read secrets (server-only)
+        allow read: if false;
+        allow write: if false;
+      }
+
+      /**
+       * CRITICAL: Agent Brains Collection (Server-Only)
+       * Contains AI brain state, relationships, knowledge base
+       * NOTE: コードではagentBrainsコレクションを使用（agentsではない）
+       */
+      match /agentBrains/{agentId} {
+        // Nobody can read agent brains (server-only)
+        allow read: if false;
+        allow write: if false;
+
+        /**
+         * Thinking Logs (Admin Debug Only)
+         */
+        match /thoughts/{thoughtId} {
+          // Only admins can read (for debugging)
+          allow read: if isAdmin();
+          allow write: if false;
+        }
+      }
+
+      /**
+       * Players Sub-collection
+       */
+      match /players/{playerId} {
+        // Players can read all player info in their game
+        allow read: if isPlayerInGame(gameId);
+
+        // Players can only update their own player doc
+        allow update: if isOwner(playerId);
+
+        // Players can join if game is in lobby
+        allow create: if isAuthenticated() &&
+                         playerId == request.auth.uid &&
+                         isLobbyPhase(get(/databases/$(database)/documents/games/$(gameId)).data);
+
+        // No delete (use API)
+        allow delete: if false;
+      }
+
+      /**
+       * Messages Sub-collection (Chat)
+       */
+      match /messages/{messageId} {
+        // Players can read all messages
+        allow read: if isPlayerInGame(gameId);
+
+        // Players can create messages (their own only)
+        allow create: if isAuthenticated() &&
+                         request.resource.data.senderId == request.auth.uid &&
+                         isPlayerInGame(gameId);
+
+        // No updates or deletes
+        allow update, delete: if false;
+      }
+
+      /**
+       * Actions Sub-collection (Game Actions)
+       */
+      match /actions/{actionId} {
+        // Players can read all actions
+        allow read: if isPlayerInGame(gameId);
+
+        // Players can create actions (their own only)
+        allow create: if isAuthenticated() &&
+                         request.resource.data.actorId == request.auth.uid &&
+                         isPlayerInGame(gameId);
+
+        // No updates or deletes
+        allow update, delete: if false;
+      }
+
+      /**
+       * Logs Sub-collection (Unified Game Logs)
+       */
+      match /logs/{logId} {
+        // Players can read all logs
+        allow read: if isPlayerInGame(gameId);
+
+        // No direct writes (server generates logs)
+        allow write: if false;
+      }
+
+      /**
+       * Thinking Logs Sub-collection (AI Thinking States)
+       */
+      match /thinkingLogs/{logId} {
+        // Players can read recent thinking states (for UI)
+        allow read: if isPlayerInGame(gameId);
+
+        // No writes (server-only)
+        allow write: if false;
+      }
+
+      /**
+       * Cards Sub-collection
+       */
+      match /cards/{cardId} {
+        // Players can read card backs (not secrets)
+        allow read: if isPlayerInGame(gameId);
+
+        // No direct writes (server manages cards)
+        allow write: if false;
+      }
+
+      /**
+       * Votes Sub-collection
+       */
+      match /votes/{voteId} {
+        // Players can read all votes (after voting phase ends)
+        allow read: if isPlayerInGame(gameId) &&
+                       get(/databases/$(database)/documents/games/$(gameId)).data.phase == 'ending';
+
+        // Players can create their own vote (once)
+        allow create: if isAuthenticated() &&
+                         request.resource.data.voterId == request.auth.uid &&
+                         isPlayerInGame(gameId) &&
+                         !exists(/databases/$(database)/documents/games/$(gameId)/votes/$(request.auth.uid));
+
+        // No updates or deletes
+        allow update, delete: if false;
+      }
+
+      /**
+       * Solver Results Sub-collection
+       */
+      match /solverResults/{resultId} {
+        // Players in game can read solver results
+        allow read: if isPlayerInGame(gameId);
+
+        // No direct writes (server-only)
+        allow write: if false;
+      }
+    }
+
+
+    // ========================================
+    // Library Collection (User's Scenario Library)
+    // ========================================
+
+    match /library/{userId} {
+      // Users can read their own library
+      allow read: if isOwner(userId);
+
+      // Users can write their own library
+      allow write: if isOwner(userId);
+    }
+
+
+    // ========================================
+    // Admin Collections (Debug Only)
+    // ========================================
+
+    match /admin/{document=**} {
+      allow read, write: if isAdmin();
+    }
+
+
+    // ========================================
+    // Default Deny All
+    // ========================================
+
+    // Deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

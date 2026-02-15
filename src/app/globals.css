@@ -1,0 +1,205 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * MisteryMesh Global Styles
+ * "The Infinite Mystery Library" Edition - Dark Academia Enhanced
+ */
+
+@layer base {
+  :root {
+    /* Dark Academia Color Variables */
+    --parchment-light: #f4f1e8;
+    --parchment-default: #f5e6c8;
+    --parchment-dark: #d4c5a1;
+    --ink-black: #1a1410;
+    --ink-brown: #3d2817;
+    --blood-red: #8b1538;
+    --gold-accent: #c9a961;
+    --emerald-accent: #2d5f4a;
+    --amber-accent: #d4a574;
+
+    /* Semantic Colors */
+    --success: #4a7c59;
+    --warning: #c17817;
+    --danger: #8b1538;
+    --info: #4a5d7c;
+  }
+
+  /* スクロールバーのカスタマイズ（Dark Academia風） */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--ink-brown);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--gold-accent);
+    border-radius: 4px;
+    border: 2px solid var(--ink-brown);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--amber-accent);
+  }
+
+  /* 選択時のハイライト（金箔風） */
+  ::selection {
+    background: var(--gold-accent);
+    color: var(--ink-black);
+  }
+
+  /* 滑らかなスクロール */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* フォントスムージング */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+@layer utilities {
+  /* ページめくりアニメーション */
+  .page-flip-enter {
+    animation: pageFlip 0.6s ease-in-out forwards;
+  }
+
+  /* フェードイン（霧が晴れる効果） */
+  .fade-in-blur {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  /* テキストグラデーション（魔法的な効果） */
+  .text-gradient {
+    background: linear-gradient(135deg, #d97706, #9f1239);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gold-gradient {
+    background: linear-gradient(135deg, var(--gold-accent), var(--amber-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* 封蝋風ボタン */
+  .seal-button {
+    @apply relative overflow-hidden rounded-full bg-accent-red text-paper px-6 py-3 font-serif font-bold;
+    @apply transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-accent-red/50;
+  }
+
+  /* 血の封蝋ボタン（Dark Academia強化版） */
+  .blood-seal-button {
+    @apply relative overflow-hidden rounded-full px-8 py-4 font-title font-bold text-lg;
+    @apply bg-blood-red text-parchment-light;
+    @apply transition-all duration-300 hover:scale-105;
+    @apply shadow-lg hover:shadow-xl hover:shadow-blood-red/50;
+    @apply border-2 border-gold-accent;
+  }
+
+  /* 金箔ボタン */
+  .gold-button {
+    @apply relative overflow-hidden rounded-lg px-6 py-3 font-title;
+    @apply bg-gold-accent text-ink-black;
+    @apply transition-all duration-300 hover:scale-105 hover:brightness-110;
+    @apply shadow-md hover:shadow-lg;
+  }
+
+  /* 羊皮紙風カード */
+  .parchment-card {
+    @apply rounded-lg shadow-parchment border border-gold-accent/30;
+    @apply bg-parchment-texture;
+    @apply text-ink-black;
+    @apply transition-all duration-300;
+    @apply hover:shadow-card-hover hover:-translate-y-1;
+  }
+
+  /* 古い本のようなカード */
+  .book-card {
+    @apply relative rounded-md overflow-hidden;
+    @apply bg-ink-gradient text-parchment-light;
+    @apply border-l-8 border-gold-accent;
+    @apply shadow-xl;
+    @apply transition-all duration-300;
+    @apply hover:shadow-2xl hover:border-amber-accent;
+  }
+
+  /* インク滲み効果 */
+  .ink-spread {
+    filter: drop-shadow(0 0 8px rgba(10, 10, 10, 0.5));
+  }
+
+  /* インク滲みアニメーション */
+  .ink-spread-animated {
+    animation: inkSpread 0.8s ease-out forwards;
+  }
+
+  /* 蝋燭の揺らぎ効果 */
+  .candle-glow {
+    animation: candleFlicker 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px rgba(201, 169, 97, 0.5));
+  }
+
+  /* カードめくりエフェクト */
+  .card-flip-effect {
+    @apply transition-all duration-600;
+    transform-style: preserve-3d;
+  }
+
+  .card-flip-effect.flipped {
+    transform: rotateY(180deg);
+  }
+
+  /* 本を開くアニメーション */
+  .book-open-effect {
+    animation: bookOpen 0.5s ease-out forwards;
+  }
+
+  /* シマーエフェクト（読み込み中） */
+  .shimmer-effect {
+    background: linear-gradient(
+      90deg,
+      var(--parchment-dark) 0%,
+      var(--parchment-light) 50%,
+      var(--parchment-dark) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+  }
+
+  /* ガラスモーフィズム（霧のような効果） */
+  .glass-morphism {
+    @apply backdrop-blur-md bg-ink-black/30;
+    @apply border border-gold-accent/20;
+    @apply shadow-xl;
+  }
+
+  /* 羊皮紙テクスチャ背景 */
+  .parchment-bg {
+    background-image: linear-gradient(
+        to bottom,
+        rgba(244, 241, 232, 0.95) 0%,
+        rgba(245, 230, 200, 0.95) 50%,
+        rgba(212, 197, 161, 0.95) 100%
+      ),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a961' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* インク背景 */
+  .ink-bg {
+    @apply bg-ink-gradient;
+    background-image: linear-gradient(135deg, #1a1410 0%, #3d2817 100%),
+      url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23c9a961' fill-opacity='0.03' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E");
+  }
+}
