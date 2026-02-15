@@ -32,8 +32,9 @@ docs/
 .env
 .env.local
 .env.development
-.env.production
 .env.example
+# NOTE: .env.production is NOT excluded - Next.js reads it during build
+# It contains only NEXT_PUBLIC_* values (public client config, not secrets)
 
 # TypeScript build cache
 tsconfig.tsbuildinfo

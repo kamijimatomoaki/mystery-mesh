@@ -79,9 +79,9 @@ function switchToNextRegion(): boolean {
  * モデル名を環境変数から取得
  */
 export const MODELS = {
-  TEXT: env.VERTEX_MODEL_TEXT || "gemini-2.0-flash-exp",
-  IMAGE: env.VERTEX_MODEL_IMAGE || "gemini-2.0-flash-exp-image",
-  VIDEO: env.VERTEX_MODEL_VIDEO || "veo-001",
+  TEXT: env.VERTEX_MODEL_TEXT || "gemini-2.5-flash",
+  IMAGE: env.VERTEX_MODEL_IMAGE || "gemini-2.5-flash-image",
+  VIDEO: env.VERTEX_MODEL_VIDEO || "veo-3.0-generate-001",
 } as const;
 
 /**
